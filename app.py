@@ -1,6 +1,12 @@
-from tokenize import group
 from telethon import TelegramClient
 import configparser
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from sendMail import sendEmail
+from os import path
+from crackkit import fresh, crackkit, driver
+import os
 import datetime
 
 config = configparser.ConfigParser()
@@ -11,6 +17,9 @@ api_hash = config['KEY']['api_hash']
 msg_id = []
 msg_grup = 0
 groups = []
+msg_array = []
+disp_array = []
+
 
 for key in config['GROUPS']:
     groups.append(config['GROUPS'][key])
@@ -23,31 +32,12 @@ client = TelegramClient('session_name', api_id, api_hash)
 client.start()
 
 
-def new_link(url):
-
-    return url
-
-
 def msg_parse(text):
     if msg_grup == 0:
-        pass
-        # print(text)
+        disp_array.append(crackkit(text))
     else:
         if "B.Tech" in text:
-            lines = text.split('\n')
-            url = lines[-2].replace('Apply now: ', '')
-            url = new_link(url)
-            print(url)
-
-
-# index = msg_id[0]
-# max_ind = index
-# for message in client.iter_messages(groups[0], offset_id=index, reverse=True):
-#     if int(message.id) > max_ind:
-#         max_ind = int(message.id)
-#     print(message.id)
-#     msg_parse(message.text)
-#     msg_id[0] = max_ind
+            disp_array.append(fresh(text))
 
 
 for grp in groups:
@@ -58,13 +48,31 @@ for grp in groups:
         if int(message.id) > max_ind:
             max_ind = int(message.id)
 
-        msg_parse(message.text)
+        msg_array.append(msg_parse(message.text))
+
         msg_id[msg_grup] = max_ind
+
     msg_grup += 1
 
+
+send = ' UPDATE '+str(msg_id[0])+'\n\n'
+for i in disp_array:
+    if i != None:
+        send += 'Company Name :' + i.Company+'\n'
+        send += 'Location :' + i.Location+'\n'
+        send += 'Qualification :' + i.Qualification+'\n'
+        send += 'Experience :' + i.Experience+'\n'
+        send += 'Batch :' + i.Batch+'\n'
+        send += 'Salary :' + i.Salary+'\n'
+        send += 'Apply :' + i.Apply+'\n'
+        send += "================================================================\n"
+
+sendEmail(send)
 
 # Storing newest message id
 for i in range(msg_grup):
     config['ID'][str(i)] = str(msg_id[i])
-    # with open('tele.config', 'w') as configfile:
-    #     config.write(configfile)
+    with open('tele.config', 'w') as configfile:
+        config.write(configfile)
+
+driver.close()
