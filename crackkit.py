@@ -3,6 +3,7 @@ from os import path
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from message import message
+import time
 
 options = webdriver.ChromeOptions()
 options.add_experimental_option(
@@ -48,10 +49,18 @@ def fresh(text):
 
     lines = text.split('\n')
     for line in lines:
-        msg.append(line.split(':', 1)[-1])
+        msg.append(line.split(':', 1)[-1].replace(' ', ''))
 
-    driver.get(msg[-2])
-    link = driver.find_elements(By.XPATH, '//p[2]/strong/a')
-    msg[-2] = link[0].get_attribute("href")
+    try:
+        driver.get(msg[-2])
+        links = driver.find_elements(By.XPATH, '//p//a')
+        links.reverse()
+        for link in links:
+            if "fresherjobinfo" not in link.get_attribute("href"):
+                msg[-2] = link.get_attribute("href")
+                break
+    except:
+        print('except')
+        pass
 
     return message(Company=msg[0], Location=msg[1], Qualification=msg[2], Experience=msg[3], Batch="2023", Salary=msg[4], Apply=msg[-2])
