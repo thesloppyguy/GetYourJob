@@ -35,8 +35,9 @@ client.start()
 def msg_parse(text):
     if msg_grup == 0:
         disp_array.append(crackkit(text))
+        pass
     else:
-        if "B.Tech" in text:
+        if "B.Tech" or "Any Degree" in text:
             disp_array.append(fresh(text))
 
 
@@ -67,11 +68,12 @@ for i in disp_array:
         send += 'Apply :' + i.Apply+'\n'
         send += "================================================================\n"
 
-sendEmail(send)
+sendEmail(send, "UPDATE"+str(msg_id[0]))
 
 # Storing newest message id
 for i in range(msg_grup):
     config['ID'][str(i)] = str(msg_id[i])
+    print(config['ID'][str(i)])
     with open('tele.config', 'w') as configfile:
         config.write(configfile)
 
