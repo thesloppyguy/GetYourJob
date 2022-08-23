@@ -59,6 +59,7 @@ for grp in groups:
 send = ' UPDATE '+str(msg_id[0])+'\n\n'
 for i in disp_array:
     if i != None:
+        # i.display()
         send += 'Company Name :' + i.Company+'\n'
         send += 'Location :' + i.Location+'\n'
         send += 'Qualification :' + i.Qualification+'\n'
@@ -68,7 +69,7 @@ for i in disp_array:
         send += 'Apply :' + i.Apply+'\n'
         send += "================================================================\n"
 
-sendEmail(send, "UPDATE"+str(msg_id[0]))
+sendEmail(send, "(salary)UPDATE"+str(msg_id[0]))
 
 # Storing newest message id
 for i in range(msg_grup):

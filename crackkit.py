@@ -46,11 +46,16 @@ def crackkit(text):
 
 def fresh(text):
     msg = []
-
+    batch = ''
     lines = text.split('\n')
+
     for line in lines:
         msg.append(line.split(':', 1)[-1].replace(' ', ''))
 
+    if "Batch: " not in lines[4]:
+        batch = '2023'
+    else:
+        batch = msg[4]
     try:
         driver.get(msg[-2])
         links = driver.find_elements(By.XPATH, '//p//a')
@@ -63,4 +68,4 @@ def fresh(text):
         print('except')
         pass
 
-    return message(Company=msg[0], Location=msg[1], Qualification=msg[2], Experience=msg[3], Batch="2023", Salary=msg[4], Apply=msg[-2])
+    return message(Company=msg[0], Location=msg[1], Qualification=msg[2], Experience=msg[3], Batch=batch, Salary=msg[-3], Apply=msg[-2])
