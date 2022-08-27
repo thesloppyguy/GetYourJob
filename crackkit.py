@@ -20,10 +20,15 @@ driver = webdriver.Chrome(executable_path=Chrome_driver)
 def crackkit(text):
 
     if text != None:
+
         msg = []
         lines = text.split('\n')
 
-        company = lines[0].split("**")[1]
+        if "**" in lines[0]:
+            company = lines[0].split("**", 1)[1]
+        else:
+            company = lines[0]
+
         if "crackitupdates" in text:
             url = lines[-3]
             driver.get(url)
@@ -37,8 +42,11 @@ def crackkit(text):
 
             for i in attributes:
                 msg.append(i.text)
-
-            return message(Company=company, Location=msg[-1], Qualification=msg[-5], Experience=msg[-6], Batch=msg[-4], Salary=msg[-2], Apply=apply)
+            try:
+                return message(Company=company, Location=msg[-1], Qualification=msg[-5], Experience=msg[-6], Batch=msg[-4], Salary=msg[-2], Apply=apply)
+            except:
+                url = lines[-3]
+                return message(Company=company, Apply=url)
         else:
             url = lines[-1]
             return message(Company=company, Apply=url)
@@ -48,6 +56,9 @@ def fresh(text):
     msg = []
     batch = ''
     lines = text.split('\n')
+
+    if '' in lines:
+        lines.remove('')
 
     for line in lines:
         msg.append(line.split(':', 1)[-1].replace(' ', ''))

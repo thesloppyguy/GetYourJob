@@ -35,7 +35,6 @@ client.start()
 def msg_parse(text):
     if msg_grup == 0:
         disp_array.append(crackkit(text))
-        pass
     else:
         if "B.Tech" or "Any Degree" in text:
             disp_array.append(fresh(text))
@@ -59,7 +58,7 @@ for grp in groups:
 send = ' UPDATE '+str(msg_id[0])+'\n\n'
 for i in disp_array:
     if i != None:
-        # i.display()
+        i.display()
         send += 'Company Name :' + i.Company+'\n'
         send += 'Location :' + i.Location+'\n'
         send += 'Qualification :' + i.Qualification+'\n'
@@ -69,13 +68,17 @@ for i in disp_array:
         send += 'Apply :' + i.Apply+'\n'
         send += "================================================================\n"
 
-sendEmail(send, "(salary)UPDATE"+str(msg_id[0]))
+tosend = input("send or not (y/n)")
 
-# Storing newest message id
-for i in range(msg_grup):
-    config['ID'][str(i)] = str(msg_id[i])
-    print(config['ID'][str(i)])
-    with open('tele.config', 'w') as configfile:
-        config.write(configfile)
+
+if tosend == 'y':
+    sendEmail(send, "UPDATE"+str(msg_id[0]))
+
+    # Storing newest message id
+    for i in range(msg_grup):
+        config['ID'][str(i)] = str(msg_id[i])
+        print(config['ID'][str(i)])
+        with open('tele.config', 'w') as configfile:
+            config.write(configfile)
 
 driver.close()
